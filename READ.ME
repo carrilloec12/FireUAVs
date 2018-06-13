@@ -1,0 +1,26 @@
+Author: Joshua Shaffer
+
+These files make up two parts of the UAV fire simulation. The first part is the controller synthesis, composed of:
+    1. AutomaticGenerator_RevisedRH.py
+    2. AutoGenFolders.py
+    3. WaterControl.py
+
+1 and 3 are ran individually to generate the controllers, while 2 is ran before to create the necessary directory
+
+The second part is the simulator, composed of:
+    1. Dynamics.py
+    2. FireEnv.py
+    3. FleetAndAgents.py
+    4. Graph.py
+    5. main.py
+    6. module_tester.py
+    7. Parameters.py
+    8. SimFunctions.py
+
+main.py is the primary module for manipulating all other modules and their respective classes. Each have header comments
+describing their purpose, but not much else. This is still under work as I am translating the simulation from Matlab to
+python, and numerous pieces still need to be put in place. Additionally, this work is overlapping with some other
+projects I have going on, so many pieces (FleetAndAgents.py, Dynamics.py, Graph.py) are being created with modularity in
+mind.
+
+Send any questions my way to jshaffe9@terpmail.umd.edu
