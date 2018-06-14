@@ -8,7 +8,7 @@ to python
 from Estefany_module import allocation_function
 
 class Agent(object):
-    def __init__(self, state_truth, state_belief, name, dynamics, goal, region):
+    def __init__(self, state_truth, state_belief, name, dynamics, goal, region, water_level):
         # Initialize state of the agent
         self.state_truth = state_truth
         self.state_belief = state_belief
@@ -16,6 +16,7 @@ class Agent(object):
         self.dynamic_model = dynamics()
         self.goal = goal
         self.region = region
+        self.water_level = water_level
 
     def __str__(self):
         return 'Agent: ' + self.name + ' State: ' + str(self.state)
@@ -40,6 +41,13 @@ class Agent(object):
         
     def update_region(self, reg):
         self.region = reg
+
+    def update_water_lev(self, water):
+        self.water_level = water
+
+    def attach_controllers(self, ctrl):
+        for i in range(0, len(ctrl)):
+            self.top_ctrl[i] = ctrl[i]
 
 
 class Fleet(object):
