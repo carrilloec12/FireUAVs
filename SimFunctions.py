@@ -2,40 +2,10 @@
 Primary simulation loop and interpreter functions for identifying where a UAV is in relation to synthesized
 controllers (will want to move the latter to different module)
 '''
-import os
-import imp
-import csv
 import pygame
 
 
 # These following two functions are HIGHLY dependent on the format of state for this simulation and the files they call
-def directory_interpreter(state, goal):
-
-    file_name = 'G' + str(goal[0]) + str(goal[1]) + 'Pos' + str(state[0])\
-                + str(state[1]) + 'Ori' + str(state[0]) + '.py'
-    file_name2 = 'G' + str(goal[0]) + str(goal[1]) + 'Pos' + str(state[0])\
-                + str(state[1]) + 'Ori' + str(state[0]) + 'NB.py'
-    top_directory = 'Goal' + str(goal[0]) + str(goal[1])
-
-
-    if os.path.exists('ctrls/' + top_directory + '/' + file_name2):
-        return imp.load_source('ctrls/' + top_directory + '/' + file_name2)
-    else:
-        return imp.load_source('ctrls/' + top_directory + '/' + file_name)
-
-
-def region_interpreter(state, goal):
-    file_name = 'Goal' + str(goal[0]) + str(goal[1]) + '.csv'
-    state_name = 'Pos' + str(state[0]) + str(state[1]) + 'Ori' + str(state[2])
-    with open(file_name, 'rb') as f:
-        reader = csv.reader(f)
-        listy = list(reader)
-
-    for i in range(0, len(listy)):
-        if state_name in listy[i]:
-            return i+1
-
-    return None
 
 
 def simulation_loop(fleet, env, Params, visualize=False):
