@@ -11,6 +11,7 @@ import csv
 from Estefany_module import allocation_function
 from WaterControl_controller import TulipStrategy
 
+
 class Agent(object):
     def __init__(self, state_truth, state_belief, name, dynamics, goal, region, water_level):
         # Initialize state of the agent
@@ -25,7 +26,7 @@ class Agent(object):
         self.ctrler = None
         self.wtr_ctrler = TulipStrategy()
         self.wtr_ctrler.move(0, 0, 0)
-        self.syncSignal = 1  # Will need to change eventually... (part of a function that observes other UAVs
+        self.sync_signal = 1  # Will need to change eventually... (part of a function that observes other UAVs
 
     def __str__(self):
         return 'Agent: ' + self.name + ' State: ' + str(self.state)
@@ -76,37 +77,46 @@ class Fleet(object):
     def allocate(self, env, params):
         allocation_function(self, env, params)
 
-    def update_ctrls(self, params):
+    # Used for management of all controllers attached to the agents
+    def update_ctrls(self):
         for i in self.agents:
             trigger1 = self.agents[i].update_objective_state(somethingfromallocation)
             if trigger1 is not True:
                 region = self.region_interpreter(self.agents[i].belief_state, self.agents[i].goal)
                 trigger2 = False if region == self.agents[i].region else True
-                self.agents[i].region = region
+                self.agents[i].update_region(region)
             else:
-                self.agents[i].region = self.region_interpreter(self.agents[i].belief_state, self.agents[i].goal)
+                self.agents[i].update_region(self.region_interpreter(self.agents[i].belief_state, self.agents[i].goal))
                 trigger2 = True
 
             if trigger1 is True or trigger2 is True:
                 hand = self.directory_interpreter(self.agents[i].belief_state, self.agents[i].goal)
                 self.agents[i].ctrler = hand.TulipStrategy()
                 if self.agents[i].region == 1:
-                    self.agents[i].ctrler.move(0, self.agents[i].syncSignal, 0)
+                    self.agents[i].ctrler.move(0, self.agents[i].sync_signal, 0)
                 else:
                     self.agents[i].ctrler.move(0, 0)
-
-
-
-
-
-
-
-
-
-        return 'uhhh'  # TODO incorporate the simulation functions to update the goal location and higher level
-                       # agent state controllers
+        return
 
     def update(self, env, params):
+
+        # Layout:
+        # 1. Update the controllers (call move functions)
+        for i in self.agents:
+            loc = (self.agents[i].state_belief[0], self.agents[i].state_belief[1])
+            fire = 1 if env.cells[loc].fire > 0 else 0
+            stop_signal = 0
+            output = self.agents[i].ctrler.move(fire, self.agents[i].sync_signal, stop_signal)
+
+            states = self.parse(output)
+
+
+        # 2. Update the belief of the agent (for this purpose, this is tied directly to the output of the function)
+        for i in self.agents:
+        # 3. Update the "truth" state (no propagation for now, simply set the value directly for now)
+        # 4. Update water controller
+
+
         return 'uhhh'  # TODO update plant models of the UAVs and their actions
                        # I added in 'env' for future environmental feedback options
 
@@ -138,3 +148,5 @@ class Fleet(object):
                 return i+1
 
         return None
+
+    def parse(self, output):

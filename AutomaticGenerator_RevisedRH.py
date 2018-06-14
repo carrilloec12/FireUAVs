@@ -29,64 +29,64 @@ goal_synthesis_packages = dict()  # Not used currently, may hold all synthesized
 
 # This variable includes all states that are never allowed to occur, including obstacle locations and locations that
 # produce infeasible transitions
-phi_states = ['Pos21Ori1', 'Pos21Ori3',
-              'Pos31Ori1', 'Pos31Ori3',
-              'Pos41Ori1', 'Pos41Ori3',
-              'Pos51Ori1', 'Pos51Ori3',
-              'Pos61Ori1', 'Pos61Ori3',
-              'Pos71Ori1', 'Pos71Ori3',
-              'Pos81Ori1', 'Pos81Ori3',
-              'Pos91Ori1', 'Pos91Ori3',
-              'Pos102Ori2', 'Pos102Ori4',
-              'Pos103Ori2', 'Pos103Ori4',
-              'Pos104Ori2', 'Pos104Ori4',
-              'Pos105Ori2', 'Pos105Ori4',
-              'Pos106Ori2', 'Pos106Ori4',
-              'Pos107Ori2', 'Pos107Ori4',
-              'Pos108Ori2', 'Pos108Ori4',
-              'Pos109Ori2', 'Pos109Ori4',
-              'Pos910Ori1', 'Pos910Ori3',
-              'Pos810Ori1', 'Pos810Ori3',
-              'Pos710Ori1', 'Pos710Ori3',
-              'Pos610Ori1', 'Pos610Ori3',
-              'Pos510Ori1', 'Pos510Ori3',
-              'Pos410Ori1', 'Pos410Ori3',
-              'Pos310Ori1', 'Pos310Ori3',
-              'Pos210Ori1', 'Pos210Ori3',
-              'Pos19Ori2', 'Pos19Ori4',
-              'Pos18Ori2', 'Pos18Ori4',
-              'Pos16Ori2', 'Pos16Ori4',
-              'Pos17Ori2', 'Pos17Ori4',
-              'Pos15Ori2', 'Pos15Ori4',
-              'Pos14Ori2', 'Pos14Ori4',
-              'Pos13Ori2', 'Pos13Ori4',
-              'Pos12Ori2', 'Pos12Ori4',
-              'Pos78Ori1', 'Pos78Ori3',
-              'Pos110Ori1', 'Pos110Ori2', 'Pos110Ori3', 'Pos110Ori4',
-              'Pos1010Ori1', 'Pos1010Ori2', 'Pos1010Ori3', 'Pos1010Ori4',
-              'Pos101Ori1', 'Pos101Ori2', 'Pos101Ori3', 'Pos101Ori4',
-              'Pos11Ori1', 'Pos11Ori2', 'Pos11Ori3', 'Pos11Ori4',
-              'Pos28Ori1', 'Pos28Ori2', 'Pos28Ori3', 'Pos28Ori4',
-              'Pos38Ori1', 'Pos38Ori2', 'Pos38Ori3', 'Pos38Ori4',
-              'Pos37Ori1', 'Pos37Ori2', 'Pos37Ori3', 'Pos37Ori4',
-              'Pos46Ori1', 'Pos46Ori2', 'Pos46Ori3', 'Pos46Ori4',
-              'Pos67Ori1', 'Pos67Ori2', 'Pos67Ori3', 'Pos67Ori4',
-              'Pos66Ori1', 'Pos66Ori2', 'Pos66Ori3', 'Pos66Ori4',
-              'Pos65Ori1', 'Pos65Ori2', 'Pos65Ori3', 'Pos65Ori4',
-              'Pos76Ori1', 'Pos76Ori2', 'Pos76Ori3', 'Pos76Ori4',
-              'Pos75Ori1', 'Pos75Ori2', 'Pos75Ori3', 'Pos75Ori4',
-              'Pos74Ori1', 'Pos74Ori2', 'Pos74Ori3', 'Pos74Ori4',
-              'Pos84Ori1', 'Pos84Ori2', 'Pos84Ori3', 'Pos84Ori4',
-              'Pos85Ori1', 'Pos85Ori2', 'Pos85Ori3', 'Pos85Ori4',
-              'Pos86Ori1', 'Pos86Ori2', 'Pos86Ori3', 'Pos86Ori4',
-              'Pos87Ori1', 'Pos87Ori2', 'Pos87Ori3', 'Pos87Ori4',
-              'Pos29Ori1', 'Pos29Ori3',
-              'Pos27Ori1', 'Pos27Ori3',
-              'Pos26Ori1', 'Pos26Ori3',
-              'Pos56Ori2', 'Pos56Ori4',
-              'Pos77Ori1', 'Pos77Ori3',
-              'Pos96Ori2', 'Pos96Ori4',
-              'Pos95Ori2', 'Pos95Ori4']
+phi_states = ['Pos2_1Ori1', 'Pos2_1Ori3',
+              'Pos3_1Ori1', 'Pos3_1Ori3',
+              'Pos4_1Ori1', 'Pos4_1Ori3',
+              'Pos5_1Ori1', 'Pos5_1Ori3',
+              'Pos6_1Ori1', 'Pos6_1Ori3',
+              'Pos7_1Ori1', 'Pos7_1Ori3',
+              'Pos8_1Ori1', 'Pos8_1Ori3',
+              'Pos9_1Ori1', 'Pos9_1Ori3',
+              'Pos10_2Ori2', 'Pos10_2Ori4',
+              'Pos10_3Ori2', 'Pos10_3Ori4',
+              'Pos10_4Ori2', 'Pos10_4Ori4',
+              'Pos10_5Ori2', 'Pos10_5Ori4',
+              'Pos10_6Ori2', 'Pos10_6Ori4',
+              'Pos10_7Ori2', 'Pos10_7Ori4',
+              'Pos10_8Ori2', 'Pos10_8Ori4',
+              'Pos10_9Ori2', 'Pos10_9Ori4',
+              'Pos9_10Ori1', 'Pos9_10Ori3',
+              'Pos8_10Ori1', 'Pos8_10Ori3',
+              'Pos7_10Ori1', 'Pos7_10Ori3',
+              'Pos6_10Ori1', 'Pos6_10Ori3',
+              'Pos5_10Ori1', 'Pos5_10Ori3',
+              'Pos4_10Ori1', 'Pos4_10Ori3',
+              'Pos3_10Ori1', 'Pos3_10Ori3',
+              'Pos2_10Ori1', 'Pos2_10Ori3',
+              'Pos1_9Ori2', 'Pos1_9Ori4',
+              'Pos1_8Ori2', 'Pos1_8Ori4',
+              'Pos1_6Ori2', 'Pos1_6Ori4',
+              'Pos1_7Ori2', 'Pos1_7Ori4',
+              'Pos1_5Ori2', 'Pos1_5Ori4',
+              'Pos1_4Ori2', 'Pos1_4Ori4',
+              'Pos1_3Ori2', 'Pos1_3Ori4',
+              'Pos1_2Ori2', 'Pos1_2Ori4',
+              'Pos7_8Ori1', 'Pos7_8Ori3',
+              'Pos1_10Ori1', 'Pos1_10Ori2', 'Pos1_10Ori3', 'Pos1_10Ori4',
+              'Pos10_10Ori1', 'Pos10_10Ori2', 'Pos10_0Ori3', 'Pos10_10Ori4',
+              'Pos10_1Ori1', 'Pos10_1Ori2', 'Pos10_1Ori3', 'Pos10_1Ori4',
+              'Pos1_1Ori1', 'Pos1_1Ori2', 'Pos1_1Ori3', 'Pos1_1Ori4',
+              'Pos2_8Ori1', 'Pos2_8Ori2', 'Pos2_8Ori3', 'Pos2_8Ori4',
+              'Pos3_8Ori1', 'Pos3_8Ori2', 'Pos3_8Ori3', 'Pos3_8Ori4',
+              'Pos3_7Ori1', 'Pos3_7Ori2', 'Pos3_7Ori3', 'Pos3_7Ori4',
+              'Pos4_6Ori1', 'Pos4_6Ori2', 'Pos4_6Ori3', 'Pos4_6Ori4',
+              'Pos6_7Ori1', 'Pos6_7Ori2', 'Pos6_7Ori3', 'Pos6_7Ori4',
+              'Pos6_6Ori1', 'Pos6_6Ori2', 'Pos6_6Ori3', 'Pos6_6Ori4',
+              'Pos6_5Ori1', 'Pos6_5Ori2', 'Pos6_5Ori3', 'Pos6_5Ori4',
+              'Pos7_6Ori1', 'Pos7_6Ori2', 'Pos7_6Ori3', 'Pos7_6Ori4',
+              'Pos7_5Ori1', 'Pos7_5Ori2', 'Pos7_5Ori3', 'Pos7_5Ori4',
+              'Pos7_4Ori1', 'Pos7_4Ori2', 'Pos7_4Ori3', 'Pos7_4Ori4',
+              'Pos8_4Ori1', 'Pos8_4Ori2', 'Pos8_4Ori3', 'Pos8_4Ori4',
+              'Pos8_5Ori1', 'Pos8_5Ori2', 'Pos8_5Ori3', 'Pos8_5Ori4',
+              'Pos8_6Ori1', 'Pos8_6Ori2', 'Pos8_6Ori3', 'Pos8_6Ori4',
+              'Pos8_7Ori1', 'Pos8_7Ori2', 'Pos8_7Ori3', 'Pos8_7Ori4',
+              'Pos2_9Ori1', 'Pos2_9Ori3',
+              'Pos2_7Ori1', 'Pos2_7Ori3',
+              'Pos2_6Ori1', 'Pos2_6Ori3',
+              'Pos5_6Ori2', 'Pos5_6Ori4',
+              'Pos7_7Ori1', 'Pos7_7Ori3',
+              'Pos9_6Ori2', 'Pos9_6Ori4',
+              'Pos9_5Ori2', 'Pos9_5Ori4']
 
 # Add all obstacle locations to list
 obstacle_location = list()
@@ -221,7 +221,7 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
 
     # Add all AP's for the transition space, including those tied to 'Base' and 'GoalPos' if present in transition space
     for locat in transition_part[current_horizon]:
-        add_ap_sub = 'Pos' + str(locat[0]) + str(locat[1]) + 'Ori' + str(locat[2])
+        add_ap_sub = 'Pos' + str(locat[0]) + '_' + str(locat[1]) + 'Ori' + str(locat[2])
         sys_auto.states.add_from([add_ap_sub])
         if locat[0] == 2 and locat[1] == 2:  # TODO add some global indicator of the base location
             sys_auto.states[add_ap_sub]['ap'] |= {'Base'}
@@ -237,53 +237,53 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
     # is checked in creating transitions. This is because all w regions are contained in the transition region, and
     # transitions from a w region are different than those form just transition regions
     for locat in transition_part[current_horizon]:
-        init = 'Pos' + str(locat[0]) + str(locat[1]) + 'Ori' + str(locat[2])
+        init = 'Pos' + str(locat[0]) + '_' + str(locat[1]) + 'Ori' + str(locat[2])
 
         if locat in w_part[current_horizon]:
             sys_auto.transitions.add_comb({init}, {init}, sys_actions="Stop")
             # Transitions allowed if orientation is up
             if locat[2] == 1:
                 if (locat[0], locat[1] + 1, 1) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0]) + str(locat[1] + 1) + 'Ori' + str(1)
+                    endloc = 'Pos' + str(locat[0]) + '_' + str(locat[1] + 1) + 'Ori' + str(1)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] + 1, locat[1] + 1, 2) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] + 1) + str(locat[1] + 1) + 'Ori' + str(2)
+                    endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1] + 1) + 'Ori' + str(2)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] - 1, locat[1] + 1, 4) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] - 1) + str(locat[1] + 1) + 'Ori' + str(4)
+                    endloc = 'Pos' + str(locat[0] - 1) + '_' + str(locat[1] + 1) + 'Ori' + str(4)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
             # Transitions allowed if orientation is right
             elif locat[2] == 2:
                 if (locat[0] + 1, locat[1], 2) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] + 1) + str(locat[1]) + 'Ori' + str(2)
+                    endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1]) + 'Ori' + str(2)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] + 1, locat[1] + 1, 1) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] + 1) + str(locat[1] + 1) + 'Ori' + str(1)
+                    endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1] + 1) + 'Ori' + str(1)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] + 1, locat[1] - 1, 3) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] + 1) + str(locat[1] - 1) + 'Ori' + str(3)
+                    endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1] - 1) + 'Ori' + str(3)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
             # Transitions allowed if orientation is down
             elif locat[2] == 3:
                 if (locat[0], locat[1] - 1, 1) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0]) + str(locat[1] - 1) + 'Ori' + str(1)
+                    endloc = 'Pos' + str(locat[0]) + '_' + str(locat[1] - 1) + 'Ori' + str(1)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] + 1, locat[1] - 1, 2) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] + 1) + str(locat[1] - 1) + 'Ori' + str(2)
+                    endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1] - 1) + 'Ori' + str(2)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] - 1, locat[1] - 1, 4) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] - 1) + str(locat[1] - 1) + 'Ori' + str(4)
+                    endloc = 'Pos' + str(locat[0] - 1) + '_' + str(locat[1] - 1) + 'Ori' + str(4)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
             # Transitions allowed if orientation is left
             elif locat[2] == 4:
                 if (locat[0] - 1, locat[1], 4) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] - 1) + str(locat[1]) + 'Ori' + str(4)
+                    endloc = 'Pos' + str(locat[0] - 1) + '_' + str(locat[1]) + 'Ori' + str(4)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] - 1, locat[1] + 1, 1) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] - 1) + str(locat[1] + 1) + 'Ori' + str(1)
+                    endloc = 'Pos' + str(locat[0] - 1) + '_' + str(locat[1] + 1) + 'Ori' + str(1)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] - 1, locat[1] - 1, 3) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0] - 1) + str(locat[1] - 1) + 'Ori' + str(3)
+                    endloc = 'Pos' + str(locat[0] - 1) + '_' + str(locat[1] - 1) + 'Ori' + str(3)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
 
         # Create possible transitions for initial conditions in only the transition region. Only transitions are
@@ -311,14 +311,14 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
     sys_auto_vars = set()
     sys_auto_safe = set()
 
-    # Create stop signal requirements
+    # Create stop signal requirements # TODO This should be changed to present actions...
     sys_auto_safe |= {'(StopSignal&&!Fire)->(X(sys_actions = "Stop"))'}
     sys_auto_safe |= {'(!(StopSignal&&!Fire))->(X(sys_actions = "Go"))'}
 
     # Add relevant phi variables to safety (i.e. all phi contained within this region). Never enter phi locations
     phi = ''
     for locat in transition_part[current_horizon]:
-        state = 'Pos' + str(locat[0]) + str(locat[1]) + 'Ori' + str(locat[2])
+        state = 'Pos' + str(locat[0]) + '_' + str(locat[1]) + 'Ori' + str(locat[2])
         for names in phi_states:
             if state == names:
                 phi = phi + '!(loc = "' + names + '")&&'
@@ -336,7 +336,7 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
         locat_sub = locat
 
         # Create checks to see if current position is viable initial condition
-        current_state = 'Pos' + str(locat_sub[0]) + str(locat_sub[1]) + 'Ori' + str(locat_sub[2])
+        current_state = 'Pos' + str(locat_sub[0]) + '_' + str(locat_sub[1]) + 'Ori' + str(locat_sub[2])
 
         # Run through names in phi_states to check if it's included
         indicator = 0
@@ -392,8 +392,8 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             print(synth_time)
 
             # Write controller to relevant location if it synthesized
-            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + str(y_goal_loc) + '/G' + str(x_goal_loc) + \
-                       str(y_goal_loc) + current_state + '_W' + str(current_horizon) + '.py'
+            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
+                       str(y_goal_loc) + current_state + '.py'  #'_W' + str(current_horizon) +
             if ctrl_final_sync is not None:
                 dumpsmach.write_python_case(filename, ctrl_final_sync)
 
@@ -442,8 +442,8 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             print(synth_time)
 
             # Write controller to relevant location if it synthesized
-            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + str(y_goal_loc) + '/G' + str(x_goal_loc) + \
-                       str(y_goal_loc) + current_state + '_W' + str(current_horizon) + '.py'
+            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
+                       str(y_goal_loc) + current_state + '.py'  #'_W' + str(current_horizon) +
             if ctrl_inter is not None:
                 dumpsmach.write_python_case(filename, ctrl_inter)
 
@@ -479,7 +479,7 @@ def create_and_synthesize_specs_single_goal(x_goal_loc, y_goal_loc, dimension_x,
     create_spec_space(x_goal_loc, y_goal_loc, w_part, transition_part)
 
     # Generate w file
-    with open('Goal'+str(x_goal_loc)+str(y_goal_loc)+'.csv', 'wb') as csvfile:
+    with open('Goal'+str(x_goal_loc) + '_' + str(y_goal_loc)+'.csv', 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter = ',')
         # Cycle through all horizons, starting at the first one closest to goal, and synthesize the controllers
         for current_horizon, tran1 in enumerate(transition_part):
@@ -489,7 +489,7 @@ def create_and_synthesize_specs_single_goal(x_goal_loc, y_goal_loc, dimension_x,
                 string_ext = list()
                 #print(w_part[current_horizon])
                 for item in w_part[current_horizon]:
-                    str_add = 'Pos' + str(item[0]) + str(item[1]) + 'Ori' + str(item[2])
+                    str_add = 'Pos' + str(item[0]) + '_' + str(item[1]) + 'Ori' + str(item[2])
                     #input('hello')
                     string_ext.append(str_add)
                     #print(string_ext)
