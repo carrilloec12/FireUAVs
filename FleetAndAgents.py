@@ -5,9 +5,7 @@ Still need to add in update rules for the UAVs beyond dynamic update. Need to al
 hold the top-level synthesized controllers. Also need to translate Estefany's allocation function from Matlab
 to python
 '''
-import os
-import imp
-import csv
+import os, imp, csv, re
 from Estefany_module import allocation_function
 from WaterControl_controller import TulipStrategy
 
@@ -21,6 +19,8 @@ class Agent(object):
         self.dynamic_model = dynamics()
         self.goal = goal
         self.prev_goal = goal
+        self.goal_ind = 0
+        self.base = 0
         self.region = region
         self.water_level = water_level
         self.ctrler = None
@@ -108,13 +108,21 @@ class Fleet(object):
             stop_signal = 0
             output = self.agents[i].ctrler.move(fire, self.agents[i].sync_signal, stop_signal)
 
-            states = self.parse(output)
+            values = re.findall('\d+', output["loc"])
+            state = (values[0], values[1], values[2])
+            base = output["Base"]
+            goal = output["GoalPos"]
 
+            # 2. Update the belief of the agent (for this purpose, this is tied directly to the output of the function)
+            self.agents[i].belief_state = state
+            self.agents[i].goal_ind = 1 if (goal and self.agents[i].sync_signal) else 0
+            self.agents[i].base = 1 if base else 0
 
-        # 2. Update the belief of the agent (for this purpose, this is tied directly to the output of the function)
-        for i in self.agents:
-        # 3. Update the "truth" state (no propagation for now, simply set the value directly for now)
-        # 4. Update water controller
+            # 3. Update the "truth" state (no propagation for now, simply set the value directly for now)
+            self.agents[i].truth_state = state
+
+            # 4. Update water controller
+            
 
 
         return 'uhhh'  # TODO update plant models of the UAVs and their actions
@@ -123,11 +131,11 @@ class Fleet(object):
     # returns the module for accessing the class (use return.myClass())
     def directory_interpreter(self, state, goal):
 
-        file_name = 'G' + str(goal[0]) + str(goal[1]) + 'Pos' + str(state[0])\
-                    + str(state[1]) + 'Ori' + str(state[0]) + '.py'
-        file_name2 = 'G' + str(goal[0]) + str(goal[1]) + 'Pos' + str(state[0])\
-                    + str(state[1]) + 'Ori' + str(state[0]) + 'NB.py'
-        top_directory = 'Goal' + str(goal[0]) + str(goal[1])
+        file_name = 'G' + str(goal[0]) + '_' + str(goal[1]) + 'Pos' + str(state[0]) \
+                    + '_' + str(state[1]) + 'Ori' + str(state[0]) + '.py'
+        file_name2 = 'G' + str(goal[0]) + '_' + str(goal[1]) + 'Pos' + str(state[0]) \
+                     + '_' + str(state[1]) + 'Ori' + str(state[0]) + 'NB.py'
+        top_directory = 'Goal' + str(goal[0]) + '_' + str(goal[1])
 
 
         if os.path.exists('ctrls/' + top_directory + '/' + file_name2):
@@ -137,8 +145,8 @@ class Fleet(object):
 
     # return region associated with goal
     def region_interpreter(self, state, goal):
-        file_name = 'Goal' + str(goal[0]) + str(goal[1]) + '.csv'
-        state_name = 'Pos' + str(state[0]) + str(state[1]) + 'Ori' + str(state[2])
+        file_name = 'Goal' + str(goal[0]) + '_' + str(goal[1]) + '.csv'
+        state_name = 'Pos' + str(state[0]) + '_' + str(state[1]) + 'Ori' + str(state[2])
         with open(file_name, 'rb') as f:
             reader = csv.reader(f)
             listy = list(reader)
@@ -149,4 +157,4 @@ class Fleet(object):
 
         return None
 
-    def parse(self, output):
+
