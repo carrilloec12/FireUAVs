@@ -49,7 +49,7 @@ for i in range(1, params.width+1):
 
 # State setup
 # Starting states
-starts = [[2, 2, 1], [2, 2, 2], [2, 2, 3], [2, 2, 4], [2, 3, 1], [2, 3, 2]]
+starts = [[10, 10, 1], [10, 1, 2], [7, 1, 3], [9, 9, 4], [2, 3, 1], [2, 3, 2]]
 fleet = Fleet()
 
 for i in range(0, params.N):

@@ -31,52 +31,53 @@ def simulation_loop(fleet, env, Params, visualize=False):
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     continue_sim = not continue_sim
 
-            for row in range(Params.width):
-                for column in range(Params.height):
-                    if env.cells[(row+1, column+1)].fire > 0:
-                        color = Params.fire_color[env.cells[(row+1, column+1)].fire-1]
-                    elif env.cells[(row+1, column+1)].obstacle == 1:
+            for row in range(Params.height):
+                for column in range(Params.width):
+                    if env.cells[(column+1, Params.width - (row))].fire > 0:
+                        color = Params.fire_color[env.cells[(column+1, Params.width - (row))].fire-1]
+                    elif env.cells[(column+1, Params.width - (row))].obstacle == 1:
                         color = Params.obs_color
                     else:
-                        color = Params.fuel_color[env.cells[(row+1, column+1)].fuel]
+                        color = Params.fuel_color[env.cells[((column+1), Params.width - (row))].fuel]
 
                     pygame.draw.rect(screen, color,
                              [(Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN, Params.WIDTH,
+                              (Params.MARGIN + Params.HEIGHT) * (row) + Params.MARGIN, Params.WIDTH,
                               Params.HEIGHT])
 
+            # TODO rewrite this to take in position and orientation of an agent, then display based on such by drawing triangle centered on position and oriented by shown value
             for i in fleet.agents:
-                loc = (fleet.agents[i].state_truth[0], fleet.agents[i].state_truth[1])
-                if fleet.agents[i].state_truth[1] == 1:
-                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
-                elif fleet.agents[i].state_truth[1] == 2:
-                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
-                elif fleet.agents[i].state_truth[1] == 3:
-                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
+                loc = (fleet.agents[i].state_truth[0] - 1, Params.height - (fleet.agents[i].state_truth[1] - 1))
+                if fleet.agents[i].state_truth[2] == 1:
+                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + (Params.WIDTH * 0.5) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5)]
+                elif fleet.agents[i].state_truth[2] == 2:
+                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT * 0.5) - Params.MARGIN * 0.5)]
+                elif fleet.agents[i].state_truth[2] == 3:
+                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + 0.5 * Params.WIDTH + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5)]
                 else:
-                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
+                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
+                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT * 0.5) - Params.MARGIN * 0.5),
+                            ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
+                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
+                            ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
+                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5)]
 
-                pygame.draw.polygon(screen, (0, 0, 80), vert)
+                pygame.draw.polygon(screen, (94, 154, 249), vert)
 
             # Insert visualization update here
             # Limit to 60 frames per second

@@ -7,7 +7,7 @@ import numpy as np
 class Params(object):
 
     def __init__(self):
-        self.N = 1  # Number of UAVs
+        self.N = 4  # Number of UAVs
         self.mode_version = 'NonSync'
         self.width = 10
         self.height = 10
@@ -31,9 +31,9 @@ class Params(object):
         # Parameters related to visualization
         self.WIDTH = 40
         self.HEIGHT = 40
-        self.MARGIN = 5
+        self.MARGIN = 2
         self.fire_color = [(255, 238, 61), (255, 170, 61), (252, 61, 27)]
-        self.obs_color = (145, 145, 102)
+        self.obs_color = (130, 130, 130)
         self.fuel_color = [(3, 25, 6), (12, 106, 26), (16, 140, 35), (16, 190, 35), (16, 255, 35), (81, 255, 101),
                            (165, 255, 176)]  # need to choose fuel colors...
 
