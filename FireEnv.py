@@ -27,11 +27,11 @@ class Cell(object):
         self.fuel = fuel
         self.fire = fire
         self.fireupdate = fireupdate
+        self.ext = 0
 
     def cell_env_update(self, params):
 
         return 'uhm...'  # TODO add in update rules for the cell given parameters
 
-    def cell_agent_update(self, fleet, params):
-
-        return 'uhm...'  # TODO add in update rules given fleet locations and actions
+    def cell_agent_update(self, water_accum):
+        self.water_accum = water_accum

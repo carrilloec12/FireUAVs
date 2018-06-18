@@ -26,6 +26,7 @@ class Params(object):
         self.stop_fail = 0.5
         self.time_step = self.partition_size / self.UAV_speed  # temporary for paper purposes
         self.sim_time = 3000
+        self.stop_interval = self.time_step*5
 
         # Parameters related to visualization
         self.WIDTH = 40

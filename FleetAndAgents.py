@@ -8,10 +8,11 @@ to python
 import os, imp, csv, re
 from Estefany_module import allocation_function
 from WaterControl_controller import TulipStrategy
+from random import uniform
 
 
 class Agent(object):
-    def __init__(self, state_truth, state_belief, name, dynamics, goal, region, water_level):
+    def __init__(self, state_truth, state_belief, name, dynamics, goal, region, water_level, pause_interval):
         # Initialize state of the agent
         self.state_truth = state_truth
         self.state_belief = state_belief
@@ -23,10 +24,12 @@ class Agent(object):
         self.base = 0
         self.region = region
         self.water_level = water_level
+        self.water_dropped = 0
         self.ctrler = None
         self.wtr_ctrler = TulipStrategy()
-        self.wtr_ctrler.move(0, 0, 0)
-        self.sync_signal = 1  # Will need to change eventually... (part of a function that observes other UAVs
+        self.wtr_output = self.wtr_ctrler.move(0, 0, 0)
+        self.sync_signal = 1  # Will need to change eventually... (part of a function that observes other UAVs)
+        self.pause_time = -pause_interval
 
     def __str__(self):
         return 'Agent: ' + self.name + ' State: ' + str(self.state)
@@ -98,14 +101,24 @@ class Fleet(object):
                     self.agents[i].ctrler.move(0, 0)
         return
 
-    def update(self, env, params):
+    def update(self, env, params, time):
 
         # Layout:
         # 1. Update the controllers (call move functions)
         for i in self.agents:
+            # if time hasn't exceeded the original pause time for the agent plus the interval, don't update agent
+            if time - self.agents[i].pause_time < params.pause_interval:
+                continue
+
+            # gather current location and fire status
             loc = (self.agents[i].state_belief[0], self.agents[i].state_belief[1])
             fire = 1 if env.cells[loc].fire > 0 else 0
-            stop_signal = 0
+
+            # stop signal logic for updating an agent
+            stop_signal = 1 if uniform(0,1) > 1 - params.stop_fail else 0
+            self.agents[i].pause_time = time if stop_signal == 1 else -params.pause_interval
+
+            # move synthesized controller given updates on environment
             output = self.agents[i].ctrler.move(fire, self.agents[i].sync_signal, stop_signal)
 
             values = re.findall('\d+', output["loc"])
@@ -122,11 +135,16 @@ class Fleet(object):
             self.agents[i].truth_state = state
 
             # 4. Update water controller
-            
+            wtr_out_prev = self.agents[i].wtr_output
+            self.agents[i].wtr_output = self.agents[i].wtr_ctrler.move(base, agents[i].sync_signal, goal)
+            val = re.findall('\d+', self.agents[i].wtr_output["loc"])
+            # add water dropped by UAV to the appropriate cell
+            if wtr_out_prev["loc"] != self.agents[i].wtr_output["loc"]:
+                val2 = re.findall('\d+', wtr_out_prev)
+                env.cells[(self.agents[i].state_truth[0], self.agents[i].state_truth[1])].cell_agent_update(
+                    int(val[0]) - int(val2[0]))
 
-
-        return 'uhhh'  # TODO update plant models of the UAVs and their actions
-                       # I added in 'env' for future environmental feedback options
+            self.agents[i].water_level = int(val[0])  # not necessary I think
 
     # returns the module for accessing the class (use return.myClass())
     def directory_interpreter(self, state, goal):
