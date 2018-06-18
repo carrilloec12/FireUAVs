@@ -32,6 +32,9 @@ class Params(object):
         self.WIDTH = 40
         self.HEIGHT = 40
         self.MARGIN = 5
+        self.fire_color = [(255, 0, 0), (255, 0, 0), (255, 0, 0)]
+        self.obs_color = (145, 145, 102)
+        self.fuel_color = [(0, 0, 0)]  # need to choose fuel colors...
 
     def __str__(self):
         return 'Params...'
