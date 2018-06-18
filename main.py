@@ -36,7 +36,7 @@ for i in range(1, params.width+1):
             Fuel = 0
         else:
             Obstacle = 0
-            Fuel = 1
+            Fuel = 6
 
         if (i, j) in fires:
             Fires = 1
@@ -53,7 +53,7 @@ starts = [[2, 2, 1], [2, 2, 2], [2, 2, 3], [2, 2, 4], [2, 3, 1], [2, 3, 2]]
 fleet = Fleet()
 
 for i in range(0, params.N):
-    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [2, 2, 0], 1, params.stop_interval))
+    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [2, 2, 0], 1, 100, params.stop_interval))
 
 
 
@@ -61,8 +61,8 @@ for i in range(0, params.N):
 monte_carlo_number = 1  # Number of desired monte carlo simulations
 results = dict()
 
-#for monte in range(1, monte_carlo_number+1):
-#    results[monte] = simulation_loop(fleet, env, Params, true)
+for monte in range(1, monte_carlo_number+1):
+    results[monte] = simulation_loop(fleet, env, params, True)
 
 
 

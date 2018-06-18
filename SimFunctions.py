@@ -17,6 +17,8 @@ def simulation_loop(fleet, env, Params, visualize=False):
                (Params.HEIGHT + Params.MARGIN) * Params.height + Params.MARGIN]
         screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption("UAVs on Fire")
+        # Used to manage how fast the screen updates
+        clock = pygame.time.Clock()
 
     t = 0.0
     continue_sim = True
@@ -31,55 +33,57 @@ def simulation_loop(fleet, env, Params, visualize=False):
 
             for row in range(Params.width):
                 for column in range(Params.height):
-                    if env.cells[(row, column)].fire > 0:
-                        color = Params.fire_color[env.cells[(row, column)].fire]
-                    elif env.cells[(row, column)].obstacle == 1:
+                    if env.cells[(row+1, column+1)].fire > 0:
+                        color = Params.fire_color[env.cells[(row+1, column+1)].fire-1]
+                    elif env.cells[(row+1, column+1)].obstacle == 1:
                         color = Params.obs_color
                     else:
-                        color = Params.fuel_color[env.cells[(row, column)].fuel]
+                        color = Params.fuel_color[env.cells[(row+1, column+1)].fuel]
 
                     pygame.draw.rect(screen, color,
                              [(Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
                               (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN, Params.WIDTH,
                               Params.HEIGHT])
 
-                    for i in fleet.agents:
-                        loc = (fleet.agents[i].state_truth[0], fleet.agents[i].state_truth[1])
-                        if fleet.agents[i].state_truth[1] == 1:
-                            vert = [((Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column/2 + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + row + Params.MARGIN)]
-                        elif fleet.agents[i].state_truth[1] == 2:
-                            vert = [((Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column/2 + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + row + Params.MARGIN)]
-                        elif fleet.agents[i].state_truth[1] == 3:
-                            vert = [((Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column/2 + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + row + Params.MARGIN)]
-                        else:
-                            vert = [((Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + Params.MARGIN),
-                              ((Params.MARGIN + Params.WIDTH) * (column) + column/2 + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * row + row + Params.MARGIN)]
+            for i in fleet.agents:
+                loc = (fleet.agents[i].state_truth[0], fleet.agents[i].state_truth[1])
+                if fleet.agents[i].state_truth[1] == 1:
+                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
+                elif fleet.agents[i].state_truth[1] == 2:
+                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
+                elif fleet.agents[i].state_truth[1] == 3:
+                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
+                else:
+                    vert = [((Params.MARGIN + Params.WIDTH) * loc[0] + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * loc[1] + Params.MARGIN),
+                        ((Params.MARGIN + Params.WIDTH) * (loc[0] + 1/2) + Params.MARGIN,
+                        (Params.MARGIN + Params.HEIGHT) * (loc[1] + 1) + Params.MARGIN)]
 
-                        pygame.draw.polygon(screen, (0, 0, 80), vert)
+                pygame.draw.polygon(screen, (0, 0, 80), vert)
 
-                        # need to add numbers too...
-
-                    node_name = 'x' + str(column) + 'y' + str(row)
             # Insert visualization update here
+            # Limit to 60 frames per second
+            clock.tick(20)
+
+            # Go ahead and update the screen with what we've drawn.
+            pygame.display.flip()
 
         continue_sim = False  # debugger code TODO remove
 
@@ -95,3 +99,5 @@ def simulation_loop(fleet, env, Params, visualize=False):
             fleet.update(env, Params)
 
             t = t + Params.time_step
+
+    return 'No results yet bud'
