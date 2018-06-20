@@ -6,7 +6,9 @@ Purpose: Driver function for UAV fire sim. Will be retooled to work with the Dro
 Created: June 5, 2018
 Updated: June 13, 2018
 '''
+
 import numpy as np
+import math
 from Parameters import Params
 from SimFunctions import simulation_loop
 from FleetAndAgents import Agent, Fleet
@@ -49,11 +51,11 @@ for i in range(1, params.width+1):
 
 # State setup
 # Starting states
-starts = [[10, 10, 1], [10, 1, 2], [7, 1, 3], [9, 9, 4], [2, 3, 1], [2, 3, 2]]
+starts = [[10, 10, 0.0], [10, 1, math.pi/2.0], [7, 1, math.pi], [9, 9, math.pi*3.0/2.0], [2, 3, 0.0], [2, 3, 0.0]]
 fleet = Fleet()
 
 for i in range(0, params.N):
-    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [2, 2, 0], 1, 100, params.stop_interval))
+    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [2, 2, 0.0], 1, 100, params.stop_interval))
 
 
 

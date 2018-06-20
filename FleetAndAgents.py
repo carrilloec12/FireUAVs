@@ -5,7 +5,7 @@ Still need to add in update rules for the UAVs beyond dynamic update. Need to al
 hold the top-level synthesized controllers. Also need to translate Estefany's allocation function from Matlab
 to python
 '''
-import os, imp, csv, re
+import os, imp, csv, re, math
 #from Estefany_module import allocation_function
 from WaterControl_controller import TulipStrategy
 from random import uniform
@@ -19,6 +19,7 @@ class Agent(object):
         self.name = name
         self.dynamic_model = dynamics()
         self.goal = goal
+        self.desired_state = goal
         self.prev_goal = goal
         self.goal_ind = 0
         self.base = 0
@@ -28,6 +29,7 @@ class Agent(object):
         self.ctrler = None
         self.wtr_ctrler = TulipStrategy()
         self.wtr_output = self.wtr_ctrler.move(0, 0, 0)
+        self.sync_signal_prev = 1
         self.sync_signal = 1  # Will need to change eventually... (part of a function that observes other UAVs)
         self.pause_time = -pause_interval
 
@@ -39,9 +41,9 @@ class Agent(object):
 
     def update_state_truth(self, tau, ctrl, dist, x_override=None):
         if x_override is None:
-            self.state = self.dynamic_model.integrate_state(tau, self.state, ctrl, dist)
+            self.state_truth = self.dynamic_model.integrate_state(tau, self.state, ctrl, dist)
         else:
-            self.state = self.dynamic_model.integrate_state(tau, x_override, ctrl, dist)
+            self.state_truth = self.dynamic_model.integrate_state(tau, x_override, ctrl, dist)
 
     def update_state_belief(self, state):
         self.state_belief = state
@@ -56,9 +58,19 @@ class Agent(object):
         
     def update_region(self, reg):
         self.region = reg
+        return
 
     def update_water_lev(self, water):
         self.water_level = water
+        return
+
+    def display_loc(self, params):
+        center = (self.state_truth[0] - 1, params.height - (self.state_truth[1] - 1))
+        loc_center_screen = (params.WIDTH * center[0] + params.WIDTH/2, params.HEIGHT * center[1] - params.HEIGHT/2)
+        vec1 = (loc_center_screen[0] + params.FRONT_VECTOR[0], loc_center_screen[1] + params.FRONT_VECTOR[1])
+        vec2 = (loc_center_screen[0] + params.BACK_BOT_VECT[0], loc_center_screen[1] + params.BACK_BOT_VECT[1])
+        vec3 = (loc_center_screen[0] + params.BACK_TOP_VECT[0], loc_center_screen[1] + params.BACK_TOP_VECT[1])
+        return [vec1, vec2, vec3]
 
 
 class Fleet(object):
@@ -76,13 +88,14 @@ class Fleet(object):
 
     def add_agent(self, agent):
         self.agents[agent.name] = agent
+        return
 
     def allocate(self, env, params):
         # allocation_function(self, env, params)
         return 'uhhhh'
 
     # Used for management of all controllers attached to the agents
-    def update_ctrls(self):
+    def update_ctrls(self, time):
         for i in self.agents:
             trigger1 = True  # Temporary TODO self.agents[i].update_objective_state(somethingfromallocation)
             if trigger1 is not True:
@@ -100,13 +113,7 @@ class Fleet(object):
                     self.agents[i].ctrler.move(0, self.agents[i].sync_signal, 0)
                 else:
                     self.agents[i].ctrler.move(0, 0)
-        return
 
-    def update(self, env, params, time):
-
-        # Layout:
-        # 1. Update the controllers (call move functions)
-        for i in self.agents:
             # if time hasn't exceeded the original pause time for the agent plus the interval, don't update agent
             if time - self.agents[i].pause_time < params.pause_interval:
                 continue
@@ -119,22 +126,32 @@ class Fleet(object):
             stop_signal = 1 if uniform(0,1) > 1 - params.stop_fail else 0
             self.agents[i].pause_time = time if stop_signal == 1 else -params.pause_interval
 
-            # move synthesized controller given updates on environment
-            output = self.agents[i].ctrler.move(fire, self.agents[i].sync_signal, stop_signal)
+            # move synthesized controller given updates on environment (need to modify so that only two inputs used if
+            # other controller is used)
+            if self.agents[i].region == 1:
+                output = self.agents[i].ctrler.move(fire, self.agents[i].sync_signal, stop_signal)
+            else:
+                output = self.agents[i].ctrler.move(fire, stop_signal)
 
+            # update controller outputs for angle to reflect true values
             values = re.findall('\d+', output["loc"])
-            state = (values[0], values[1], values[2])
-            base = output["Base"]
-            goal = output["GoalPos"]
+            if values[2] == 1:
+                values[2] = 0.0
+            elif values[2] == 2:
+                values[2] = math.pi/2.0
+            elif values[2] == 3:
+                values[2] = math.pi
+            else:
+                values[2] = 3.0 * math.pi / 2.0
 
-            # 2. Update the belief of the agent (for this purpose, this is tied directly to the output of the function)
-            self.agents[i].belief_state = state
-            self.agents[i].goal_ind = 1 if (goal and self.agents[i].sync_signal) else 0
-            self.agents[i].base = 1 if base else 0
+            # update various belief states and previous states, plus desired states and control inputs
+            self.agents[i].prev_state = self.agents[i].state_belief
+            self.agents[i].desired_state = (values[0], values[1], values[2])
+            # find control inputs from graph...
+            self.agents[i].control_inputs = (0.0 , 0.0)
 
-            # 3. Update the "truth" state (no propagation for now, simply set the value directly for now)
-            self.agents[i].truth_state = state
-
+            base = self.agents[i].base
+            goal = self.agents[i].goal_ind
             # 4. Update water controller
             wtr_out_prev = self.agents[i].wtr_output
             self.agents[i].wtr_output = self.agents[i].wtr_ctrler.move(base, agents[i].sync_signal, goal)
@@ -146,6 +163,23 @@ class Fleet(object):
                     int(val[0]) - int(val2[0]))
 
             self.agents[i].water_level = int(val[0])  # not necessary I think
+
+            # update goal index and base index to agent's belief (done here because we are assuming the UAV makes it,
+            # and that the controller move was enacted correctly
+            self.agents[i].goal_ind = 1 if (output["GoalPos"] and self.agents[i].sync_signal_prev) else 0
+            self.agents[i].base = 1 if output["Base"] else 0
+
+        return
+
+    def update(self, env, params, time_step):
+
+        # Layout:
+        for i in self.agents:
+            # Propagate state forward for now (no environmental inputs at the moment)
+            self.agents[i].state_truth = self.agents[i].dynamic_model.integrate_state(time_step,
+                                            self.agents[i].state_truth, self.agents[i].control_inputs, (0.0, 0.0, 0.0))
+            # 2. Update the belief of the agent (for this purpose, this is tied directly to the output of the function)
+            self.agents[i].belief_state = self.agents[i].state_truth
 
     # returns the module for accessing the class (use return.myClass())
     def directory_interpreter(self, state, goal):

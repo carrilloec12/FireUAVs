@@ -13,8 +13,8 @@ def simulation_loop(fleet, env, Params, visualize=False):
     # Setup visuals
     if visualize:
         pygame.init()
-        window_size = [(Params.WIDTH + Params.MARGIN) * Params.width + Params.MARGIN,
-               (Params.HEIGHT + Params.MARGIN) * Params.height + Params.MARGIN]
+        window_size = [(Params.WIDTH * Params.width),
+               (Params.HEIGHT) * Params.height]
         screen = pygame.display.set_mode(window_size)
         pygame.display.set_caption("UAVs on Fire")
         # Used to manage how fast the screen updates
@@ -41,20 +41,24 @@ def simulation_loop(fleet, env, Params, visualize=False):
                         color = Params.fuel_color[env.cells[((column+1), Params.width - (row))].fuel]
 
                     pygame.draw.rect(screen, color,
-                             [(Params.MARGIN + Params.WIDTH) * column + Params.MARGIN,
-                              (Params.MARGIN + Params.HEIGHT) * (row) + Params.MARGIN, Params.WIDTH,
+                             [(Params.WIDTH) * column,
+                              (Params.HEIGHT) * (row), Params.WIDTH,
                               Params.HEIGHT])
+                    pygame.draw.rect(screen, (0, 0, 0),
+                             [(Params.WIDTH) * column,
+                              (Params.HEIGHT) * (row), Params.WIDTH,
+                              Params.HEIGHT], Params.MARGIN_HALF)
 
             # TODO rewrite this to take in position and orientation of an agent, then display based on such by drawing triangle centered on position and oriented by shown value
             for i in fleet.agents:
                 loc = (fleet.agents[i].state_truth[0] - 1, Params.height - (fleet.agents[i].state_truth[1] - 1))
-                if fleet.agents[i].state_truth[2] == 1:
-                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + (Params.WIDTH * 0.5) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5)]
+                '''if fleet.agents[i].state_truth[2] == 1:
+                    vert = [((Params.WIDTH) * (loc[0]),
+                        (Params.HEIGHT) * (loc[1])),
+                        ((Params.WIDTH) * (loc[0]) + Params.WIDTH,
+                        (Params.HEIGHT) * (loc[1])),
+                        ((Params.WIDTH) * (loc[0]) + (Params.WIDTH * 0.5),
+                        (Params.HEIGHT) * (loc[1]) - (Params.HEIGHT))]
                 elif fleet.agents[i].state_truth[2] == 2:
                     vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
                         (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
@@ -75,9 +79,9 @@ def simulation_loop(fleet, env, Params, visualize=False):
                             ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
                              (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
                             ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5)]
-
-                pygame.draw.polygon(screen, (94, 154, 249), vert)
+                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5)]'''
+                #pygame.draw.circle(screen, (94, 154, 249), fleet.agents[i].display_loc(Params), 10)
+                pygame.draw.polygon(screen, (94, 154, 249), fleet.agents[i].display_loc(Params))
 
             # Insert visualization update here
             # Limit to 60 frames per second

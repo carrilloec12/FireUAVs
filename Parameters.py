@@ -2,7 +2,7 @@
 Class holding all static parameters used in simulation. Shoved them in here to condense everything
 '''
 import numpy as np
-
+import math
 
 class Params(object):
 
@@ -32,6 +32,13 @@ class Params(object):
         self.WIDTH = 40
         self.HEIGHT = 40
         self.MARGIN = 2
+        self.MARGIN_HALF = 1
+        self.TRI_BASE = 20
+        self.TRI_HEIGHT = 30
+        self.TRI_BACK_ANG = -math.pi + math.atan(self.TRI_BASE/self.TRI_HEIGHT)
+        self.FRONT_VECTOR = (self.TRI_HEIGHT/2, 0)
+        self.BACK_BOT_VECT = (-self.TRI_HEIGHT/2, self.TRI_BASE/2)
+        self.BACK_TOP_VECT = (-self.TRI_HEIGHT/2, -self.TRI_BASE/2)
         self.fire_color = [(255, 238, 61), (255, 170, 61), (252, 61, 27)]
         self.obs_color = (130, 130, 130)
         self.fuel_color = [(3, 25, 6), (12, 106, 26), (16, 140, 35), (16, 190, 35), (16, 255, 35), (81, 255, 101),
