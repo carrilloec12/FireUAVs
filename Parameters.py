@@ -24,9 +24,10 @@ class Params(object):
         self.burn_times = np.array([1 / 0.045, 1 / 0.040, 1 / 0.035])  # L
         self.burn_times = self.burn_times * self.partition_size
         self.stop_fail = 0.5
-        self.time_step = self.partition_size / self.UAV_speed  # temporary for paper purposes
+        self.update_step = 1.0 #self.partition_size / self.UAV_speed  # temporary for paper purposes
+        self.time_step = self.update_step / 100.0
         self.sim_time = 3000
-        self.stop_interval = self.time_step*5
+        self.stop_interval = self.update_step*50
 
         # Parameters related to visualization
         self.WIDTH = 40
@@ -36,13 +37,16 @@ class Params(object):
         self.TRI_BASE = 20
         self.TRI_HEIGHT = 30
         self.TRI_BACK_ANG = -math.pi + math.atan(self.TRI_BASE/self.TRI_HEIGHT)
-        self.FRONT_VECTOR = (self.TRI_HEIGHT/2, 0)
-        self.BACK_BOT_VECT = (-self.TRI_HEIGHT/2, self.TRI_BASE/2)
-        self.BACK_TOP_VECT = (-self.TRI_HEIGHT/2, -self.TRI_BASE/2)
+        self.FRONT_VECTOR = [self.TRI_HEIGHT/2, 0]
+        self.BACK_BOT_VECT = [-self.TRI_HEIGHT/2, -self.TRI_BASE/2]
+        self.BACK_TOP_VECT = [-self.TRI_HEIGHT/2, self.TRI_BASE/2]
         self.fire_color = [(255, 238, 61), (255, 170, 61), (252, 61, 27)]
         self.obs_color = (130, 130, 130)
         self.fuel_color = [(3, 25, 6), (12, 106, 26), (16, 140, 35), (16, 190, 35), (16, 255, 35), (81, 255, 101),
                            (165, 255, 176)]  # need to choose fuel colors...
+
+        # Parameters related to simulation
+        self.sim_throttle = 0.01
 
     def __str__(self):
         return 'Params...'

@@ -17,7 +17,8 @@ class Env(object):
 
     def update_cells_agent_action(self, params, fleet):
         for i in self.cells:
-            self.cells[i].cell_agent_update(fleet, params)
+            #self.cells[i].cell_agent_update(fleet, params)
+            l = 1
 
 
 class Cell(object):

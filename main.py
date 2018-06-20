@@ -14,7 +14,12 @@ from SimFunctions import simulation_loop
 from FleetAndAgents import Agent, Fleet
 from FireEnv import Env, Cell
 from Dynamics import Dynamics
+from Graph import Graph
 
+gra = Graph(Dynamics)
+gra.generate_graph_from_dynamics([1.0, 1.0, math.pi/2.0], [3, (1., 10., 0), (1., 10., 0), (0., 3.0*math.pi/2.0, 1)],
+                                 [[1., 0.], [1.0*math.pi/2.0, math.pi/2.0], [1.0*math.pi/2.0, -math.pi/2.0],
+                                  [0.0, 0.0]], 1., 0.1, 0.1)
 
 # Populate obstacles and starting fire locations (plus intensities)
 params = Params()
@@ -51,11 +56,11 @@ for i in range(1, params.width+1):
 
 # State setup
 # Starting states
-starts = [[10, 10, 0.0], [10, 1, math.pi/2.0], [7, 1, math.pi], [9, 9, math.pi*3.0/2.0], [2, 3, 0.0], [2, 3, 0.0]]
-fleet = Fleet()
+starts = [[9.0, 9.0, 0.0], [9.0, 2.0, math.pi/2.0], [7.0, 1.0, math.pi], [9.0, 9.0, math.pi*3.0/2.0], [2.0, 3.0, 0.0], [2.0, 3.0, 0.0]]
+fleet = Fleet(gra)
 
 for i in range(0, params.N):
-    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [2, 2, 0.0], 1, 100, params.stop_interval))
+    fleet.add_agent(Agent(starts[i], starts[i], 'UAV'+str(i+1), Dynamics, [6.0, 8.0, math.pi*3.0/2.0], 1, 100, params.stop_interval))
 
 
 

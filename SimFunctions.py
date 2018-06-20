@@ -3,6 +3,7 @@ Primary simulation loop and interpreter functions for identifying where a UAV is
 controllers (will want to move the latter to different module)
 '''
 import pygame
+import math
 
 
 # These following two functions are HIGHLY dependent on the format of state for this simulation and the files they call
@@ -51,37 +52,9 @@ def simulation_loop(fleet, env, Params, visualize=False):
 
             # TODO rewrite this to take in position and orientation of an agent, then display based on such by drawing triangle centered on position and oriented by shown value
             for i in fleet.agents:
-                loc = (fleet.agents[i].state_truth[0] - 1, Params.height - (fleet.agents[i].state_truth[1] - 1))
-                '''if fleet.agents[i].state_truth[2] == 1:
-                    vert = [((Params.WIDTH) * (loc[0]),
-                        (Params.HEIGHT) * (loc[1])),
-                        ((Params.WIDTH) * (loc[0]) + Params.WIDTH,
-                        (Params.HEIGHT) * (loc[1])),
-                        ((Params.WIDTH) * (loc[0]) + (Params.WIDTH * 0.5),
-                        (Params.HEIGHT) * (loc[1]) - (Params.HEIGHT))]
-                elif fleet.agents[i].state_truth[2] == 2:
-                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT * 0.5) - Params.MARGIN * 0.5)]
-                elif fleet.agents[i].state_truth[2] == 3:
-                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + 0.5 * Params.WIDTH + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5),
-                        ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
-                        (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT) - Params.MARGIN * 0.5)]
-                else:
-                    vert = [((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.MARGIN,
-                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - (Params.HEIGHT * 0.5) - Params.MARGIN * 0.5),
-                            ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.MARGIN * 0.5),
-                            ((Params.MARGIN + Params.WIDTH) * (loc[0]) + Params.WIDTH + Params.MARGIN,
-                             (Params.MARGIN + Params.HEIGHT) * (loc[1]) - Params.HEIGHT - Params.MARGIN * 0.5)]'''
                 #pygame.draw.circle(screen, (94, 154, 249), fleet.agents[i].display_loc(Params), 10)
                 pygame.draw.polygon(screen, (94, 154, 249), fleet.agents[i].display_loc(Params))
+
 
             # Insert visualization update here
             # Limit to 60 frames per second
@@ -90,19 +63,40 @@ def simulation_loop(fleet, env, Params, visualize=False):
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
-        continue_sim = False  # debugger code TODO remove
-
+        #continue_sim = False  # debugger code TODO remove
+        r = 2
         if continue_sim:
+            #print('Current time:')
+            #print(t)
+            tar = divmod(t, Params.update_step)
+            #print('ctr update')
+            #print(tar)
+            #print(math.fabs(tar[1]) < 0.1 * Params.sim_throttle)
+            if math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0 or math.fabs(tar[1] - Params.update_step) < 0.1 * Params.sim_throttle:
+                for i in fleet.agents:
+                    print(fleet.agents[i].state_belief)
+                input('Stop...')
 
-            if divmod(t, Params.time_step) == 0:
                 fleet.allocate(env, Params)
-                fleet.update_ctrls(Params)
+                fleet.update_ctrls(env, t, Params)
+                env.update_cells(Params)
+                env.update_cells_agent_action(Params, fleet)
 
-            env.update_cells(Params)
-            env.update_cells_agent_action(Params, fleet)
+                input('slow down man')
 
-            fleet.update(env, Params)
+            tar = divmod(t, Params.time_step)
+            #print('Prop update')
+            #print(tar)
+            #print(math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0)
+            if math.fabs(tar[1]) >= 0.1 * Params.sim_throttle and tar[1] != 0.0 and math.fabs(tar[1] - Params.time_step) >= 0.1 * Params.sim_throttle:
+                input('SKIPPED SOME INTEGRATION>>>')
+            if math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0 or math.fabs(tar[1] - Params.time_step) < 0.1 * Params.sim_throttle:
+                fleet.update(env, Params, Params.time_step)
+                #if r == 1:
+                for i in fleet.agents:
+                    print(fleet.agents[i].state_belief)
+                input('wait...')
 
-            t = t + Params.time_step
-
+            t = t + Params.sim_throttle
+            print(t)
     return 'No results yet bud'

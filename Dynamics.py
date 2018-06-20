@@ -19,7 +19,7 @@ class Dynamics(object):
         return [x_dot1, x_dot2, x_dot3]
 
     def integrate_state(self, time_step, x_i, ctrl, dist):
-        r = ode(self.eqn_motion)
+        r = ode(self.eqn_motion).set_integrator('dopri5', atol=0.00000001, rtol=0.00000001)
         r.set_initial_value(x_i).set_f_params(ctrl, dist)
 
         while r.successful() and r.t < time_step:
