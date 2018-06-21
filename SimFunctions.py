@@ -73,29 +73,29 @@ def simulation_loop(fleet, env, Params, visualize=False):
             #print(tar)
             #print(math.fabs(tar[1]) < 0.1 * Params.sim_throttle)
             if math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0 or math.fabs(tar[1] - Params.update_step) < 0.1 * Params.sim_throttle:
-                for i in fleet.agents:
-                    print(fleet.agents[i].state_belief)
-                input('Stop...')
+                #for i in fleet.agents:
+                #    print(fleet.agents[i].state_belief)
+                #input('Stop...')
 
                 fleet.allocate(env, Params)
                 fleet.update_ctrls(env, t, Params)
-                env.update_cells(Params)
+                env.update_cells(Params, Params.update_step)
                 env.update_cells_agent_action(Params, fleet)
 
-                input('slow down man')
+                #input('slow down man')
 
             tar = divmod(t, Params.time_step)
             #print('Prop update')
             #print(tar)
             #print(math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0)
-            if math.fabs(tar[1]) >= 0.1 * Params.sim_throttle and tar[1] != 0.0 and math.fabs(tar[1] - Params.time_step) >= 0.1 * Params.sim_throttle:
+            if math.fabs(tar[1]) >= 0.0001 and tar[1] != 0.0 and math.fabs(tar[1] - Params.time_step) >= 0.0001:
                 input('SKIPPED SOME INTEGRATION>>>')
-            if math.fabs(tar[1]) < 0.1 * Params.sim_throttle or tar[1] == 0.0 or math.fabs(tar[1] - Params.time_step) < 0.1 * Params.sim_throttle:
+            if math.fabs(tar[1]) < 0.0001 or tar[1] == 0.0 or math.fabs(tar[1] - Params.time_step) < 0.0001:
                 fleet.update(env, Params, Params.time_step)
                 #if r == 1:
-                for i in fleet.agents:
-                    print(fleet.agents[i].state_belief)
-                input('wait...')
+                #for i in fleet.agents:
+                #    print(fleet.agents[i].state_belief)
+                #input('wait...')
 
             t = t + Params.sim_throttle
             print(t)

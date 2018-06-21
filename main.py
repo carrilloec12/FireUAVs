@@ -52,7 +52,7 @@ for i in range(1, params.width+1):
             Fires = 0
             FireUpdate = 0
 
-        env.add_cell((i, j), Obstacle, Fuel, Fires, FireUpdate, Water_Accum)
+        env.add_cell((i, j), params, Obstacle, Fuel, Fires, FireUpdate, Water_Accum)
 
 # State setup
 # Starting states

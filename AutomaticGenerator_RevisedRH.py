@@ -231,6 +231,9 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
     # Initial condition, empty set
     sys_auto_init = set()
 
+    #print(transition_part[current_horizon])
+    #print(w_part[current_horizon])
+    #input('uhmmm...')
     # NOTE: that current_horizon is 1, 2, 3, ...
     # Create all transitions through brute force method of checking existence of locations in the transition region next
     # to every starting point, dependent on the orientation. This is ran on transition region and inclusion in w region
@@ -265,8 +268,8 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
             # Transitions allowed if orientation is down
             elif locat[2] == 3:
-                if (locat[0], locat[1] - 1, 1) in transition_part[current_horizon]:
-                    endloc = 'Pos' + str(locat[0]) + '_' + str(locat[1] - 1) + 'Ori' + str(1)
+                if (locat[0], locat[1] - 1, 3) in transition_part[current_horizon]:
+                    endloc = 'Pos' + str(locat[0]) + '_' + str(locat[1] - 1) + 'Ori' + str(3)
                     sys_auto.transitions.add_comb({init}, {endloc}, sys_actions="Go")
                 if (locat[0] + 1, locat[1] - 1, 2) in transition_part[current_horizon]:
                     endloc = 'Pos' + str(locat[0] + 1) + '_' + str(locat[1] - 1) + 'Ori' + str(2)
@@ -294,7 +297,6 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             sys_auto.transitions.add_comb({init}, {init}, sys_actions="Go")
 
     # Begin generating the specifications!!
-
     # Create the additional environmental variables, including signal for w region next to goal
     env_auto_vars = {'StopSignal', 'Fire'}
     if current_horizon == 1:
@@ -332,8 +334,12 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
            str(x_goal_loc) + ',' + str(y_goal_loc) + ')!'))
 
     # Cycle through all initial conditions in this w region for synthesizing controller
-    for locat in w_part[current_horizon]:
+    for idxn, locat in enumerate(w_part[current_horizon]):
         locat_sub = locat
+
+        #if locat == (9, 8, 3):
+        #    print('here')
+        #    input('wait...')
 
         # Create checks to see if current position is viable initial condition
         current_state = 'Pos' + str(locat_sub[0]) + '_' + str(locat_sub[1]) + 'Ori' + str(locat_sub[2])
@@ -383,20 +389,29 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             if ctrl_final_sync is None:
                 print('Failed to synthesize ' + current_state + ', moving to next w_part and transition_part')
                 w_part[current_horizon + 1].append(locat)
-                transition_part[current_horizon + 1].append(locat)
-                w_part[current_horizon].remove(locat)
+                if locat not in transition_part[current_horizon + 1]:
+                    transition_part[current_horizon + 1].append(locat)
+                w_part[current_horizon][idxn] = None
                 transition_part[current_horizon].remove(locat)
+
+                #if locat == (9, 8, 2):
+                 #   print('here')
+                 #   print(w_part[current_horizon])
+                 #   input('wait...')
 
             # Stopwatch and print
             synth_time = time.time() - start_time
             print(synth_time)
 
             # Write controller to relevant location if it synthesized
-            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + '_' + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
+            filename = 'ctrls/Goal' + str(x_goal_loc) + '_' + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
                        str(y_goal_loc) + current_state + '.py'  #'_W' + str(current_horizon) +
             if ctrl_final_sync is not None:
                 dumpsmach.write_python_case(filename, ctrl_final_sync)
-
+            #if locat == (9, 8, 2):
+            #    print('here')
+            #    print(w_part[current_horizon])
+            #    input('wait...')
         # All other horizons from the first one (>= W2)
         else:
             print('Synthesis for ' + current_state)
@@ -433,8 +448,9 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             if ctrl_inter is None:
                 print('Failed to synthesize ' + current_state + ', moving to next w_part and transition_part')
                 w_part[current_horizon + 1].append(locat)
-                transition_part[current_horizon + 1].append(locat)
-                w_part[current_horizon].remove(locat)
+                if locat not in transition_part[current_horizon + 1]:
+                    transition_part[current_horizon + 1].append(locat)
+                w_part[current_horizon][idxn] = None
                 transition_part[current_horizon].remove(locat)
 
             # Stopwatch and print
@@ -442,7 +458,7 @@ def create_w_specs_all_init_cond(current_horizon, x_goal_loc, y_goal_loc, w_part
             print(synth_time)
 
             # Write controller to relevant location if it synthesized
-            filename = 'ProcessedMoves2/Goal' + str(x_goal_loc) + '_' + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
+            filename = 'ctrls/Goal' + str(x_goal_loc) + '_' + str(y_goal_loc) + '/G' + str(x_goal_loc) + '_' + \
                        str(y_goal_loc) + current_state + '.py'  #'_W' + str(current_horizon) +
             if ctrl_inter is not None:
                 dumpsmach.write_python_case(filename, ctrl_inter)
@@ -491,6 +507,8 @@ def create_and_synthesize_specs_single_goal(x_goal_loc, y_goal_loc, dimension_x,
                 string_ext = list()
                 #print(w_part[current_horizon])
                 for item in w_part[current_horizon]:
+                    if item is None:
+                        continue
                     str_add = 'Pos' + str(item[0]) + '_' + str(item[1]) + 'Ori' + str(item[2])
                     #input('hello')
                     string_ext.append(str_add)

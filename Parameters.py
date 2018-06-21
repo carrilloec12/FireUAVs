@@ -21,13 +21,15 @@ class Params(object):
         self.max_water_capacity = 50  # L
         self.ext_vol = np.array([1.2, 0.95, 0.7])  # L
         self.ext_vol = self.ext_vol * self.partition_size * self.partition_size / 4.5
-        self.burn_times = np.array([1 / 0.045, 1 / 0.040, 1 / 0.035])  # L
-        self.burn_times = self.burn_times * self.partition_size
+        self.burn_times = np.array([1, 1, 1])   #np.array([1 / 0.045, 1 / 0.040, 1 / 0.035])  # L
+        self.burn_times = self.burn_times * 10.0  #self.burn_times = self.burn_times * self.partition_size
         self.stop_fail = 0.5
         self.update_step = 1.0 #self.partition_size / self.UAV_speed  # temporary for paper purposes
-        self.time_step = self.update_step / 100.0
+        self.time_step = self.update_step / 10.0
         self.sim_time = 3000
         self.stop_interval = self.update_step*50
+        self.max_fire_intensity = 3
+        self.fire_update_times = [0.0, self.burn_times[0], self.burn_times[1], self.burn_times[2]]
 
         # Parameters related to visualization
         self.WIDTH = 40
@@ -46,7 +48,7 @@ class Params(object):
                            (165, 255, 176)]  # need to choose fuel colors...
 
         # Parameters related to simulation
-        self.sim_throttle = 0.01
+        self.sim_throttle = 0.1
 
     def __str__(self):
         return 'Params...'
